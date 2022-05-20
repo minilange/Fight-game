@@ -1,78 +1,159 @@
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
 
 canvas.width = 1024;
 canvas.height = 768;
 
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+ctx.fillStyle = "black";
+
+let gameover = "<h1>Game Over</h1>" + '<button onclick="location.reload()">Restart</button>';
+
 const gravity = 0.7;
 
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-class Sprite {
-    constructor({position, velocoty}) {
-        this.position = position;
-        this.velocity = velocoty;
-        this.width = 100;
-        this.height = 150;
-    }
-    
-    draw() {
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-    }
-
-    update() {
-        this.draw()
-        this.position.y += this.velocity.y;
-        
-        if (this.position.y + this.height >= canvas.height) {
-            this.velocity.y = 0;
-            this.velocity.y += -10;
-        } else {
-            this.velocity.y += gravity;
-        }
-    }
-}
-
-const player = new Sprite({
+const background = new Sprite({
     position: {
-        x: 100,
-        y: 100
-    },
-    velocoty: {
         x: 0,
-        y: 0
-    }
-});
-
-const enemy = new Sprite({
-    position: {
-        x: 500,
-        y: 0
+        y: 0,
     },
-    velocoty: {
-        x: 0,
-        y: 0
-    }
-});
-
-function animate() {
-    window.requestAnimationFrame(animate);
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    player.update();
-    enemy.update();
-}
-
-animate();
-
-window.addEventListener('keydown', (e) => {
-    console.log(e.key)
-    switch (e.key) {
-        case 'w':
-            player.velocity.y = -10;
-            break;
-    }
+    imageSrc: "./assets/background/background.png",
 })
 
-console.log(player);
+const shop = new Sprite({
+    position: {
+        x: 650,
+        y: 175,
+    },
+    imageSrc: "./assets/decorations/shop_anim.png",
+    scale: 2.4,
+    framesMax: 6
+})
+
+const player = new Fighter({
+    position: {
+        x: 100,
+        y: 0,
+    },
+    velocity: {
+        x: 0,
+        y: 0,
+    },
+    offset: {
+        x: 0,
+        y: 0,
+    },
+    color: "lightblue",
+});
+
+const enemy = new Fighter({
+    position: {
+        x: 500,
+        y: 100,
+    },
+    velocity: {
+        x: 0,
+        y: 0,
+    },
+    offset: {
+        x: -50,
+        y: 0,
+    },
+    color: "violet",
+});
+
+const keys = {
+    a: {
+        pressed: false,
+    },
+    d: {
+        pressed: false,
+    },
+    w: {
+        pressed: false,
+    },
+    ArrowLeft: {
+        pressed: false,
+    },
+    ArrowRight: {
+        pressed: false,
+    },
+    ArrowUp: {
+        pressed: false,
+    },
+};
+
+let timer = 10;
+decreaseTimer();
+animate();
+
+window.addEventListener("keydown", (event) => {
+    console.log(event.key);
+    switch (event.key) {
+        //player keys
+        case "d":
+            keys.d.pressed = true;
+            player.lastKey = "d";
+            break;
+        case "a":
+            keys.a.pressed = true;
+            player.lastKey = "a";
+            break;
+        case "w":
+            keys.w.pressed = true;
+            player.lastKey = "w";
+            break;
+        case " ":
+            player.attack();
+            break;
+
+        // Enemy keys
+        case "ArrowRight":
+            keys.ArrowRight.pressed = true;
+            enemy.lastKey = "ArrowRight";
+            break;
+        case "ArrowLeft":
+            keys.ArrowLeft.pressed = true;
+            enemy.lastKey = "ArrowLeft";
+            break;
+        case "ArrowUp":
+            keys.ArrowUp.pressed = true;
+            enemy.lastKey = "ArrowUp";
+            break;
+        case "ArrowDown":
+            enemy.attack();
+            break;
+    }
+});
+
+window.addEventListener("keyup", (event) => {
+    console.log(event.key);
+    switch (event.key) {
+        //player keys
+        case "d":
+            keys.d.pressed = false;
+            break;
+        case "a":
+            keys.a.pressed = false;
+            break;
+        case "w":
+            keys.w.pressed = false;
+            break;
+        case " ":
+            player.isAttacking = false;
+
+        // Enemy keys
+
+        case "ArrowRight":
+            keys.ArrowRight.pressed = false;
+            break;
+        case "ArrowLeft":
+            keys.ArrowLeft.pressed = false;
+            break;
+        case "ArrowUp":
+            keys.ArrowUp.pressed = false;
+            break;
+        case "ArrowDown":
+            enemy.isAttacking = false;
+            break;
+    }
+});

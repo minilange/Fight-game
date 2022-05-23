@@ -31,7 +31,7 @@ const shop = new Sprite({
 
 const player = new Fighter({
     position: {
-        x: 100,
+        x: 0,
         y: 0,
     },
     velocity: {
@@ -68,7 +68,7 @@ const player = new Fighter({
         attack: {
             imageSrc: "./assets/character/Mac/Attack1.png",
             framesMax: 6,
-            framesHold: 5,
+            framesHold: 8,
         },
         dead: {
             imageSrc: "./assets/character/Mac/death.png",
@@ -88,7 +88,7 @@ const enemy = new Fighter({
         y: 0,
     },
     offset: {
-        x: -50,
+        x: 0,
         y: 0,
     },
     color: "violet",

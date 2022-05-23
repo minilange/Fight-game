@@ -12,18 +12,35 @@ class Sprite {
         this.framesHold = 10;
     }
 
-    draw() {
-        ctx.drawImage(
-            this.image,
-            this.framesCurrent * (this.image.width / this.framesMax),
-            0,
-            this.image.width / this.framesMax,
-            this.image.height,
-            this.position.x,
-            this.position.y,
-            (this.image.width / this.framesMax) * this.scale,
-            this.image.height * this.scale
-        );
+    draw(mirror = false) {
+        ctx.save();
+        if (mirror) {
+            ctx.scale(-1, 1);
+            ctx.drawImage(
+                this.image,
+                this.framesCurrent * (this.image.width / this.framesMax),
+                0,
+                this.image.width / this.framesMax,
+                this.image.height,
+                -this.position.x - this.image.width / (this.framesMax - 2),
+                this.position.y,
+                (this.image.width / this.framesMax) * this.scale,
+                this.image.height * this.scale
+            );
+            ctx.restore();
+        } else {
+            ctx.drawImage(
+                this.image,
+                this.framesCurrent * (this.image.width / this.framesMax),
+                0,
+                this.image.width / this.framesMax,
+                this.image.height,
+                this.position.x,
+                this.position.y,
+                (this.image.width / this.framesMax) * this.scale,
+                this.image.height * this.scale
+            );
+        }
     }
 
     animateFrames() {
@@ -68,7 +85,8 @@ class Fighter extends Sprite {
         this.framesHold = 10;
         this.sprites = sprites;
         this.isDead = false;
- 
+        this.mirrorImage = false;
+
         for (const sprite in this.sprites) {
             sprites[sprite].image = new Image();
             sprites[sprite].image.src = this.sprites[sprite].imageSrc;
@@ -78,22 +96,13 @@ class Fighter extends Sprite {
     }
 
     update() {
-        this.draw();
+        this.draw(this.mirrorImage);
 
-        if(!this.isDead) {
+        if (!this.isDead) {
             this.animateFrames()
         }
 
         this.image.height = 200;
-
-        // this.framesElapsed++;
-        // if (this.framesElapsed % this.framesHold === 0) {
-        //     if (this.framesCurrent < this.framesMax - 1) {
-        //         this.framesCurrent++;
-        //     } else {
-        //         this.framesCurrent = 0;
-        //     }
-        // }
 
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
         this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
@@ -102,7 +111,7 @@ class Fighter extends Sprite {
         this.position.x += this.velocity.x;
 
         let posOffset = 450;
-        
+
         if (this.position.y + this.height >= canvas.height - posOffset) {
             this.velocity.y = 0;
             this.position.y = canvas.height - posOffset - this.height;
@@ -150,12 +159,14 @@ class Fighter extends Sprite {
                 break;
 
             case "runL":
+                this.mirrorImage = true;
                 this.image = this.sprites.run.image;
                 this.framesMax = this.sprites.run.framesMax;
                 this.framesHold = this.sprites.run.framesHold;
                 break;
 
             case "runR":
+                this.mirrorImage = false;
                 this.image = this.sprites.run.image;
                 this.framesMax = this.sprites.run.framesMax;
                 this.framesHold = this.sprites.run.framesHold;
@@ -167,7 +178,7 @@ class Fighter extends Sprite {
                 this.framesHold = this.sprites.jump.framesHold;
                 this.framesCurrent = 0;
                 break;
-                
+
             case "fall":
                 this.image = this.sprites.fall.image;
                 this.framesMax = this.sprites.fall.framesMax;
@@ -181,7 +192,7 @@ class Fighter extends Sprite {
                 this.framesHold = this.sprites.attack.framesHold;
                 this.framesCurrent = 0;
                 break;
-            
+
             case "dead":
                 this.image = this.sprites.dead.image;
                 this.framesMax = this.sprites.dead.framesMax;

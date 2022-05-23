@@ -7,7 +7,7 @@ canvas.height = 768;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "black";
 
-let gameover = "<h1>Game Over</h1>" + '<button onclick="location.reload()">Restart</button>';
+let gameover = "<div style='display: flex; flex-direction: column'><h1>Game Over</h1>";
 
 const gravity = 0.7;
 
@@ -43,6 +43,9 @@ const player = new Fighter({
         y: 0,
     },
     color: "lightblue",
+    imageSrc: "./assets/character/char_blue_idle.png",
+    scale: 2.5,
+    framesMax: 6
 });
 
 const enemy = new Fighter({
@@ -59,6 +62,9 @@ const enemy = new Fighter({
         y: 0,
     },
     color: "violet",
+    imageSrc: "./assets/character/enemy_red_idle.png",
+    scale: 2.5,
+    framesMax: 6
 });
 
 const keys = {

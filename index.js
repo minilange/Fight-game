@@ -1,13 +1,13 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
+let animation;
+
 canvas.width = 1024;
 canvas.height = 768;
 
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "black";
-
-let gameover = "<div style='display: flex; flex-direction: column'><h1>Game Over</h1>";
 
 const gravity = 0.7;
 
@@ -43,9 +43,39 @@ const player = new Fighter({
         y: 0,
     },
     color: "lightblue",
-    imageSrc: "./assets/character/char_blue_idle.png",
     scale: 2.5,
-    framesMax: 6
+    sprites: {
+        idle: {
+            imageSrc: "./assets/character/Mac/Idle.png",
+            framesMax: 8,
+            framesHold: 10,
+        },
+        run: {
+            imageSrc: "./assets/character/Mac/Run.png",
+            framesMax: 8,
+            framesHold: 10,
+        },
+        jump: {
+            imageSrc: "./assets/character/Mac/Jump.png",
+            framesMax: 2,
+            framesHold: 10,
+        },
+        fall: {
+            imageSrc: "./assets/character/Mac/Fall.png",
+            framesMax: 2,
+            framesHold: 10,
+        },
+        attack: {
+            imageSrc: "./assets/character/Mac/Attack1.png",
+            framesMax: 6,
+            framesHold: 5,
+        },
+        dead: {
+            imageSrc: "./assets/character/Mac/death.png",
+            framesMax: 6,
+            framesHold: 10,
+        }
+    }
 });
 
 const enemy = new Fighter({
@@ -62,9 +92,39 @@ const enemy = new Fighter({
         y: 0,
     },
     color: "violet",
-    imageSrc: "./assets/character/enemy_red_idle.png",
     scale: 2.5,
-    framesMax: 6
+    sprites: {
+        idle: {
+            imageSrc: "./assets/character/Kenji/Idle.png",
+            framesMax: 4,
+            framesHold: 10,
+        },
+        run: {
+            imageSrc: "./assets/character/Kenji/Run.png",
+            framesMax: 8,
+            framesHold: 10,
+        },
+        jump: {
+            imageSrc: "./assets/character/Kenji/Jump.png",
+            framesMax: 2,
+            framesHold: 10,
+        },
+        fall: {
+            imageSrc: "./assets/character/Kenji/Fall.png",
+            framesMax: 2,
+            framesHold: 10,
+        },
+        attack: {
+            imageSrc: "./assets/character/Kenji/Attack1.png",
+            framesMax: 4,
+            framesHold: 10,
+        },
+        dead: {
+            imageSrc: "./assets/character/Kenji/death.png",
+            framesMax: 7,
+            framesHold: 10,
+        }
+    }
 });
 
 const keys = {
@@ -107,6 +167,7 @@ window.addEventListener("keydown", (event) => {
         case "w":
             keys.w.pressed = true;
             player.lastKey = "w";
+            player.jump();
             break;
         case " ":
             player.attack();
@@ -124,6 +185,7 @@ window.addEventListener("keydown", (event) => {
         case "ArrowUp":
             keys.ArrowUp.pressed = true;
             enemy.lastKey = "ArrowUp";
+            enemy.jump();
             break;
         case "ArrowDown":
             enemy.attack();

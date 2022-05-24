@@ -4,11 +4,10 @@ function decreaseTimer() {
         if (timer === 0 || player.health <= 0 || enemy.health <= 0) {
             determineWinner({ player, enemy });
             document.querySelector("#timer").innerHTML = "<p>Game Over</p>";
-        } else {
-            timer--;
-            setTimeout(decreaseTimer, 1000);
-            document.querySelector("#timer").innerHTML = timer;
-        }
+        } 
+        timer--;
+        setTimeout(decreaseTimer, 1000);
+        document.querySelector("#timer").innerHTML = timer;
     }
 }
 

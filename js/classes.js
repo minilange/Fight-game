@@ -136,7 +136,6 @@ class Fighter extends Sprite {
         this.isDead = false;
         this.health = 100;
         this.switchSprites("idle", true)
-        // this.position.y = canvas.height - 450;
     }
 
     switchSprites(sprite, force = false) {

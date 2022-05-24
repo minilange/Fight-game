@@ -68,11 +68,16 @@ const player = new Fighter({
         attack: {
             imageSrc: "./assets/character/Mac/Attack1.png",
             framesMax: 6,
-            framesHold: 8,
+            framesHold: 6,
         },
         dead: {
             imageSrc: "./assets/character/Mac/death.png",
             framesMax: 6,
+            framesHold: 20,
+        },
+        hit: {
+            imageSrc: "./assets/character/Mac/TakeHit.png",
+            framesMax: 4,
             framesHold: 10,
         }
     }
@@ -122,6 +127,11 @@ const enemy = new Fighter({
         dead: {
             imageSrc: "./assets/character/Kenji/death.png",
             framesMax: 7,
+            framesHold: 20,
+        },
+        hit: {
+            imageSrc: "./assets/character/Kenji/takeHit.png",
+            framesMax: 3,
             framesHold: 10,
         }
     }

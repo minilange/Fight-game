@@ -98,6 +98,7 @@ function animate() {
 
     // ENEMY MOVEMENT
     enemy.velocity.x = 0;
+    enemy.switchSprites("runL")
     enemy.switchSprites("idle")
     if (!enemy.isDead) {
 

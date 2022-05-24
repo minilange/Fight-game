@@ -22,7 +22,7 @@ class Sprite {
                 0,
                 this.image.width / this.framesMax,
                 this.image.height,
-                -this.position.x - this.image.width / (this.framesMax - 2),
+                -this.position.x - this.image.width / (this.framesMax) * this.scale,
                 this.position.y,
                 (this.image.width / this.framesMax) * this.scale,
                 this.image.height * this.scale
@@ -91,8 +91,6 @@ class Fighter extends Sprite {
             sprites[sprite].image = new Image();
             sprites[sprite].image.src = this.sprites[sprite].imageSrc;
         }
-
-        console.log(this.sprites);
     }
 
     update() {
@@ -128,17 +126,8 @@ class Fighter extends Sprite {
         }, 1000);
     }
 
-    isGrounded() {
-        let posOffset = 450;
-        if (this.position.y + this.height >= canvas.height - posOffset) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     jump() {
-        if (this.isGrounded() && !this.isDead) {
+        if (this.position.y + this.height >= canvas.height - 450 && !this.isDead) {
             this.velocity.y = -20;
         }
     }

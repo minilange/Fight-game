@@ -1,11 +1,14 @@
 function decreaseTimer() {
     if (timer > 0) {
+        console.log(timer === 0 || player.health <= 0 || enemy.health <= 0);
         if (timer === 0 || player.health <= 0 || enemy.health <= 0) {
             determineWinner({ player, enemy });
+            document.querySelector("#timer").innerHTML = "<p>Game Over</p>";
+        } else {
+            timer--;
+            setTimeout(decreaseTimer, 1000);
+            document.querySelector("#timer").innerHTML = timer;
         }
-        timer--;
-        setTimeout(decreaseTimer, 1000);
-        document.querySelector("#timer").innerHTML = timer;
     }
 }
 
@@ -19,17 +22,20 @@ function determineWinner({ player, enemy }) {
             displayText.style.display = 'flex';
             displayText.innerHTML = gameover;
 
-            if (player.health === enemy.health) {
+            if (player.health === enemy.health || timer === 0) {
                 displayText.innerHTML += "<p>Draw</p>";
 
             } else if (player.health >= enemy.health || enemy.health === 0) {
                 displayText.innerHTML += "<p>Player 1 Win</p>";
+                playerWins++;
 
             } else if (player.health <= enemy.health || player.health === 0) {
                 displayText.innerHTML += "<p>Player 2 Win</p>";
+                enemyWins++;
             }
 
-            displayText.innerHTML += '<button onclick="location.reload()">Restart</button><div>';
+            displayText.innerHTML += '<button onclick="resetGame()">Restart</button><div>';
+            document.querySelector("#pointCounter").innerHTML = `${playerWins} : ${enemyWins}`;
         }
     }
 }
@@ -41,6 +47,23 @@ function retangularCollision({ rect1, rect2 }) {
         rect1.attackBox.position.y + rect1.attackBox.height >= rect2.position.y &&
         rect1.attackBox.position.y <= rect2.position.y + rect2.attackBox.height
     );
+}
+
+function resetGame() {
+    player.revive()
+    enemy.revive();
+
+    player.position = { x: 0, y: 0 };
+    enemy.position = { x: 500, y: 100 };
+
+    document.querySelector("#displayText").style.display = 'none';
+    document.querySelector("#displayText").innerHTML = '';
+
+    document.querySelector("#playerHealth").style.width = player.health + "%";
+    document.querySelector("#enemyHealth").style.width = enemy.health + "%";
+
+    timer = 60;
+    document.querySelector("#timer").innerHTML = timer;
 }
 
 function animate() {
@@ -79,18 +102,12 @@ function animate() {
         } else if (player.velocity.y > 0) {
             player.switchSprites("fall");
             player.isJumping = false;
-        } 
-        
-        
-        if (
-            retangularCollision({
-                rect1: player,
-                rect2: enemy,
-            }) &&
-            player.isAttacking
-        ) {
+        }
+
+        if (player.isAttacking && retangularCollision({ rect1: player, rect2: enemy })) {
             player.isAttacking = true;
-            enemy.health -= 10;
+            enemy.health -= HITDMG;
+            enemy.switchSprites("hit")
             document.querySelector("#enemyHealth").style.width = enemy.health + "%";
             console.log("player hit 💀" + player.health);
         }
@@ -98,7 +115,6 @@ function animate() {
 
     // ENEMY MOVEMENT
     enemy.velocity.x = 0;
-    enemy.switchSprites("runL")
     enemy.switchSprites("idle")
     if (!enemy.isDead) {
 
@@ -120,14 +136,10 @@ function animate() {
             enemy.isJumping = false;
         }
 
-        if (retangularCollision({
-            rect1: enemy,
-            rect2: player,
-        }) &&
-            enemy.isAttacking
-        ) {
+        if (enemy.isAttacking && retangularCollision({ rect1: enemy, rect2: player })) {
             enemy.isAttacking = true;
-            player.health -= 10;
+            player.health -= HITDMG;
+            player.switchSprites("hit")
             document.querySelector("#playerHealth").style.width = player.health + "%";
             console.log("Enemy hit 🔥" + enemy.health);
         }

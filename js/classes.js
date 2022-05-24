@@ -132,8 +132,16 @@ class Fighter extends Sprite {
         }
     }
 
-    switchSprites(sprite) {
-        if (this.image === this.sprites.dead.image || this.image === this.sprites.attack.image && this.framesCurrent < this.sprites.attack.framesMax - 1) {
+    revive() {
+        this.isDead = false;
+        this.health = 100;
+        this.switchSprites("idle", true)
+        // this.position.y = canvas.height - 450;
+    }
+
+    switchSprites(sprite, force = false) {
+        if (!force && (this.image === this.sprites.dead.image || this.image === this.sprites.attack.image && this.framesCurrent < this.sprites.attack.framesMax - 1 ||
+            this.image === this.sprites.hit.image && this.framesCurrent < this.sprites.hit.framesMax - 1)) {
             if (this.framesCurrent === this.sprites.dead.framesMax - 1) {
                 this.isDead = true;
             }
@@ -179,6 +187,13 @@ class Fighter extends Sprite {
                 this.image = this.sprites.attack.image;
                 this.framesMax = this.sprites.attack.framesMax;
                 this.framesHold = this.sprites.attack.framesHold;
+                this.framesCurrent = 0;
+                break;
+
+            case "hit":
+                this.image = this.sprites.hit.image;
+                this.framesMax = this.sprites.hit.framesMax;
+                this.framesHold = this.sprites.hit.framesHold;
                 this.framesCurrent = 0;
                 break;
 

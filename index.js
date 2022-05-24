@@ -2,7 +2,7 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
 let animation;
-
+const HITDMG = 5;
 canvas.width = 1024;
 canvas.height = 768;
 
@@ -10,6 +10,9 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "black";
 
 const gravity = 0.7;
+
+let playerWins = 0;
+let enemyWins = 0;
 
 const background = new Sprite({
     position: {
@@ -78,7 +81,7 @@ const player = new Fighter({
         hit: {
             imageSrc: "./assets/character/Mac/TakeHit.png",
             framesMax: 4,
-            framesHold: 10,
+            framesHold: 20,
         }
     }
 });
@@ -102,7 +105,7 @@ const enemy = new Fighter({
         idle: {
             imageSrc: "./assets/character/Kenji/Idle.png",
             framesMax: 4,
-            framesHold: 10,
+            framesHold: 15,
         },
         run: {
             imageSrc: "./assets/character/Kenji/Run.png",
@@ -132,7 +135,7 @@ const enemy = new Fighter({
         hit: {
             imageSrc: "./assets/character/Kenji/takeHit.png",
             framesMax: 3,
-            framesHold: 10,
+            framesHold: 15,
         }
     }
 });
